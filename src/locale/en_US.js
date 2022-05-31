@@ -1,0 +1,23 @@
+const en_US = {
+  start: 'start',
+  switch: '切换 中文 ',
+  main_pyjiemian:'Peng Ye is navigation bar',
+  Interface:'Interface',
+  Login:'Log ln',
+  Forget_password:'Forget password',
+  Remember_password:'Stay Signed In',
+  Password:'Password',
+  Prompt_password:'Please input a password',
+  Username:'Username',
+  Prompt_username:'Please input a username',
+  Current_login:'Current login account number',
+  postId:'postId',
+  postCode:'postCode',
+  postName:'postName',
+  postSort:'postSort',
+  status:'status',
+  createTime:'createTime',
+  normal:'normal',
+  Deactivate:'Deactivate',
+}
+export default en_US

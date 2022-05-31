@@ -1,0 +1,23 @@
+const zh_TW = {
+  start: '开始',
+  switch: 'switch English',
+  main_pyjiemian:'彭烨的导航条',
+  Interface:'界面',
+  Login:"登录",
+  Forget_password:'忘记密码',
+  Remember_password:'记住密码',
+  Password:'密码',
+  Prompt_password:'请输入密码',
+  Username:'账号',
+  Prompt_username:'请输入账号',
+  Current_login:'当前登录账号',
+  postId:'岗位编号',
+  postCode:'岗位编码',
+  postName:'岗位名称',
+  postSort:'岗位顺序',
+  status:'状态',
+  createTime:'创建时间',
+  normal:'正常',
+  Deactivate:'停用',
+}
+export default zh_TW
