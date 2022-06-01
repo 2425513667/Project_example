@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { Delete, BorderColor, Add } from "@material-ui/icons";
@@ -182,13 +182,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function ORder() {
   const classes = useStyles();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("postId");
-  const [selected, setSelected] = React.useState([]); //id 数据
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rows, setRows] = React.useState([]); //数据
-  React.useEffect(() => {
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("postId");
+  const [selected, setSelected] = useState([]); //id 数据
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rows, setRows] = useState([]); //数据
+  useEffect(() => {
     selectPostAll().then(
       (response) => {
         console.log("成功了", response);
@@ -243,9 +243,9 @@ export default function ORder() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   //  警告框
-  const [open, setOpen] = React.useState(false);
-  const [post_id, setPoset_id] = React.useState(); //删除的id
-  const [post_name, setPost_name] = React.useState(); //删除的post_name
+  const [open, setOpen] = useState(false);
+  const [post_id, setPoset_id] = useState(); //删除的id
+  const [post_name, setPost_name] = useState(); //删除的post_name
 
   const handleClickOpen = (event, postId, postName) => {
     setPoset_id(postId);
@@ -265,9 +265,9 @@ export default function ORder() {
   };
 
   //对话框
-  const [duihua, setDuihua] = React.useState(false); //新增
-  const [selectedValue, setselectedValue] = React.useState(0); // 单选框 初始
-  const [updateindex, setupdateindex] = React.useState(); // 单选框 初始
+  const [duihua, setDuihua] = useState(false); //新增
+  const [selectedValue, setselectedValue] = useState(0); // 单选框id初始
+  const [updateindex, setupdateindex] = useState(); // 单选框修改初始
 
   const handleChange = (event) => {
     setselectedValue(event.target.value);
@@ -280,14 +280,8 @@ export default function ORder() {
     setupdateindex(rows.findIndex((post) => post.postId === post_id));
     setDuihua(true);
   };
-  //修改
-  const handleClickOpenupdate = (postId) => {
-    setupdateindex(rows.findIndex((post) => post.postId === postId));
-    setDuihua(true);
-  };
-
   //修改的初始值
-  const [huoqutianjiazi, sethuoqutianjiazi] = React.useState({
+  const [huoqutianjiazi, sethuoqutianjiazi] = useState({
     postId: "",
     postName: "",
     postCode: "",
@@ -295,6 +289,12 @@ export default function ORder() {
     status: selectedValue,
     createTime: "",
   });
+  //修改
+  const handleClickOpenupdate = (postId) => {
+    setupdateindex(rows.findIndex((post) => post.postId === postId));
+    setDuihua(true);
+  };
+
   //新增修改获取值方法
   const getVlaue = (key, e) => {
     let d = huoqutianjiazi;
@@ -308,7 +308,6 @@ export default function ORder() {
 
   //新增方法
   const postADD = () => {
-    console.log(huoqutianjiazi.postId);
     let d = huoqutianjiazi;
     d["status"] = selectedValue;
     d["postId"] = rows.length + 1;
@@ -327,9 +326,25 @@ export default function ORder() {
     CommonTip.success("新增成功");
   };
 
+  useEffect(() => {
+    let d = rows[updateindex];
+    sethuoqutianjiazi(d);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateindex]);
+
   //修改方法
   const postUpdate = () => {
-    CommonTip.success(updateindex);
+    let py={};
+    for (let index = 0; index < rows.length; index++) {
+      const rowstext=rows[index];
+      if (rowstext?.post_id===huoqutianjiazi.postId) {
+        py={...py,huoqutianjiazi}
+      }else{
+        py={...py,rowstext}
+      }
+    }
+    setDuihua(false);
+    CommonTip.success("修改成功");
   };
   return (
     <div className={classes.root}>
@@ -484,8 +499,7 @@ export default function ORder() {
               placeholder="请输入岗位名称"
               name="postName"
               size="small"
-              value={rows[updateindex]?.postName || undefined}
-              defaultValue={huoqutianjiazi.postName}
+              defaultValue={rows[updateindex]?.postName}
               onKeyUp={getVlaue.bind(this, "postName")}
             ></TextField>
           </ListItem>
@@ -499,10 +513,9 @@ export default function ORder() {
             <TextField
               style={{ minWidth: "400px" }}
               variant="outlined"
-              placeholder="请输入编码名称"
+              placeholder="请输入编码编码"
               name="postCode"
-              value={rows[updateindex]?.postCode || undefined}
-              defaultValue={huoqutianjiazi.postCode}
+              defaultValue={rows[updateindex]?.postCode}
               size="small"
               onKeyUp={getVlaue.bind(this, "postCode")}
             ></TextField>
@@ -517,9 +530,8 @@ export default function ORder() {
             <TextField
               id="outlined-number"
               style={{ minWidth: "400px" }}
-              defaultValue={huoqutianjiazi.postSort}
+              defaultValue={rows[updateindex]?.postSort}
               type="number"
-              value={rows[updateindex]?.postSort || undefined}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -532,7 +544,8 @@ export default function ORder() {
           <ListItem>
             <RadioGroup
               aria-label="gender"
-              value={rows[updateindex]?.status || selectedValue}
+              defaultvalue={rows[updateindex]?.status || selectedValue}
+              value={huoqutianjiazi?.status}
               name="radio-buttons-group"
               row
               onChange={handleChange}
@@ -571,8 +584,7 @@ export default function ORder() {
               placeholder="请输入时间"
               size="medium"
               name="createTime"
-              value={rows[updateindex]?.createTime || undefined}
-              defaultValue={huoqutianjiazi.createTime}
+              defaultValue={rows[updateindex]?.createTime}
               onChange={getVlaue.bind(this, "createTime")}
             ></TextField>
           </ListItem>
