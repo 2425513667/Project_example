@@ -23,6 +23,8 @@ import MailIcon from "@material-ui/icons/Mail";
 import { NavLink, Route, Switch } from "react-router-dom";
 import Home from "../Home";
 import Order from "../Order";
+import Warehouse from "../Warehouse";
+import Commodity from "../Commodity";
 
 import { mainContext } from "../../reducer";
 import { FormattedMessage } from "react-intl";
@@ -188,15 +190,34 @@ function Main(props) {
               <InboxIcon />
             </ListItemIcon>
             <ListItemText>
-              <FormattedMessage id="Interface" /> Home
+              类别管理
+              <FormattedMessage id="Interface" />
             </ListItemText>
           </ListItem>
-          <ListItem button key={2} component={NavLink} to="/main/order">
+          <ListItem button key={2} component={NavLink} to="/main/Warehouse">
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText>
+              仓库管理
+              <FormattedMessage id="Interface" />
+            </ListItemText>
+          </ListItem>
+          <ListItem button key={3} component={NavLink} to="/main/commodity">
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText>
+              商品管理
+              <FormattedMessage id="Interface" />
+            </ListItemText>
+          </ListItem>
+          <ListItem button key={4} component={NavLink} to="/main/order">
             <ListItemIcon>
               <MailIcon />
             </ListItemIcon>
             <ListItemText>
-              <FormattedMessage id="Interface" /> Order
+              出入库登记 <FormattedMessage id="Interface" />
             </ListItemText>
           </ListItem>
         </List>
@@ -209,6 +230,8 @@ function Main(props) {
         <div className={classes.drawerHeader} />
         <Switch>
           <Route path="/main/home" component={Home} />
+          <Route path="/main/Warehouse" component={Warehouse} />
+          <Route path="/main/commodity" component={Commodity} />
           <Route path="/main/order" component={Order} />
         </Switch>
       </main>
