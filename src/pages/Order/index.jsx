@@ -28,6 +28,7 @@ import StyledDialog from "../../components/StyledDialog";
 import { selectPostAll } from "../../Api/Post";
 import { FormattedMessage } from "react-intl";
 import CommonTip from "../../components/CommonTip";
+import Haeder from "../../components/Haeder";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -63,10 +64,22 @@ const headCells = [
     label: <FormattedMessage id="postId"></FormattedMessage>,
   },
   {
+    id: "Warehouse",
+    numeric: true,
+    disablePadding: false,
+    label: <FormattedMessage id="Warehouse"></FormattedMessage>,
+  },
+  {
     id: "postCode",
     numeric: true,
     disablePadding: false,
     label: <FormattedMessage id="postCode"></FormattedMessage>,
+  },
+  {
+    id: "commodity",
+    numeric: true,
+    disablePadding: false,
+    label: <FormattedMessage id="commodity"></FormattedMessage>,
   },
   {
     id: "postName",
@@ -284,7 +297,9 @@ export default function ORder() {
   const [huoqutianjiazi, sethuoqutianjiazi] = useState({
     postId: "",
     postName: "",
+    Warehouse: "",
     postCode: "",
+    commodity: "",
     postSort: "",
     status: selectedValue,
     createTime: "",
@@ -310,7 +325,7 @@ export default function ORder() {
   const postADD = () => {
     let d = huoqutianjiazi;
     d["status"] = selectedValue;
-    d["postId"] = rows.length + 1;
+    d["postId"] = rows[rows.length - 1].postId + 1;
     sethuoqutianjiazi(d);
     let pyadd = rows;
     setRows([...pyadd, huoqutianjiazi]);
@@ -318,7 +333,9 @@ export default function ORder() {
     sethuoqutianjiazi({
       postId: "",
       postName: "",
+      Warehouse: "",
       postCode: "",
+      commodity: "",
       postSort: "",
       status: selectedValue,
       createTime: "",
@@ -327,27 +344,115 @@ export default function ORder() {
   };
 
   useEffect(() => {
-    let d = rows[updateindex];
-    sethuoqutianjiazi(d);
+    if (updateindex !== -1) {
+      setselectedValue(rows[updateindex]?.status);
+      let d = rows[updateindex];
+      sethuoqutianjiazi(d);
+    } else {
+      sethuoqutianjiazi({
+        postId: "",
+        postName: "",
+        Warehouse: "",
+        postCode: "",
+        commodity: "",
+        postSort: "",
+        status: 0,
+        createTime: "",
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateindex]);
 
   //修改方法
   const postUpdate = () => {
-    let py={};
+    let py = {};
     for (let index = 0; index < rows.length; index++) {
-      const rowstext=rows[index];
-      if (rowstext?.post_id===huoqutianjiazi.postId) {
-        py={...py,huoqutianjiazi}
-      }else{
-        py={...py,rowstext}
+      const rowstext = rows[index];
+      if (rowstext?.post_id === huoqutianjiazi.postId) {
+        py = { ...py, huoqutianjiazi };
+      } else {
+        py = { ...py, rowstext };
       }
     }
     setDuihua(false);
+    sethuoqutianjiazi({
+      postId: "",
+      postName: "",
+      Warehouse: "",
+      postCode: "",
+      commodity: "",
+      postSort: "",
+      status: selectedValue,
+      createTime: "",
+    });
     CommonTip.success("修改成功");
   };
+
+  //查询数据
+  const [params, setParams] = useState({
+    Warehouse: "",
+    commodity: "",
+    postName: "",
+    postSort: "",
+    postCode: "",
+    status: "",
+    createTime: null,
+  });
+
+  //查询文本框
+  const headerFiled = [
+    {
+      filed: "Warehouse",
+      labelName: "仓库信息",
+      isShow: true,
+      type: "string",
+    },
+    {
+      filed: "postCode",
+      labelName: "商品类别",
+      isShow: true,
+      type: "string",
+    },
+    {
+      filed: "commodity",
+      labelName: "商品名称",
+      isShow: true,
+      type: "string",
+    },
+    {
+      filed: "createTime",
+      labelName: "登记时间",
+      isShow: true,
+      type: "date",
+    },
+    {
+      filed: "postName",
+      labelName: "登记员",
+      isShow: false,
+      type: "string",
+    },
+    {
+      filed: "postSort",
+      labelName: "数量",
+      isShow: false,
+      type: "number",
+    },
+    {
+      filed: "status",
+      labelName: "状态",
+      isShow: false,
+      type: "single-select",
+      data: ["入库", "出库"],
+    },
+  ];
+
+  //查询重置事件
+  useEffect(() => {
+    CommonTip.success("成功");
+  }, [params]);
   return (
     <div className={classes.root}>
+      <Haeder params={params} setParams={setParams} headerFiled={headerFiled} />
       <Button onClick={handleClickOpenadd} variant="outlined" color="primary">
         <Add />
         新增
@@ -408,7 +513,19 @@ export default function ORder() {
                         align="center"
                         onClick={(event) => handleClick(event, row.postId)}
                       >
+                        {row.Warehouse}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        onClick={(event) => handleClick(event, row.postId)}
+                      >
                         {row.postCode}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        onClick={(event) => handleClick(event, row.postId)}
+                      >
+                        {row.commodity}
                       </TableCell>
                       <TableCell
                         align="center"
@@ -427,9 +544,13 @@ export default function ORder() {
                         onClick={(event) => handleClick(event, row.postId)}
                       >
                         {row.status == 0 ? (
-                          <FormattedMessage id="normal" />
+                          <div style={{ color: "red" }}>
+                            <FormattedMessage id="Warehousing" />
+                          </div>
                         ) : (
-                          <FormattedMessage id="Deactivate" />
+                          <div style={{ color: "orange" }}>
+                            <FormattedMessage id="Deactivate" />
+                          </div>
                         )}
                       </TableCell>
                       <TableCell
@@ -496,11 +617,28 @@ export default function ORder() {
             <TextField
               style={{ minWidth: "400px" }}
               variant="outlined"
-              placeholder="请输入岗位名称"
+              placeholder="请输入登记员"
               name="postName"
               size="small"
               defaultValue={rows[updateindex]?.postName}
               onKeyUp={getVlaue.bind(this, "postName")}
+            ></TextField>
+          </ListItem>
+          <ListItem style={{ marginTop: "15px" }}>
+            <FormLabel style={{ color: "red" }}>*</FormLabel>
+            <FormLabel
+              style={{ color: "black", marginRight: "15px", minWidth: "70px" }}
+            >
+              <FormattedMessage id="Warehouse" />
+            </FormLabel>
+            <TextField
+              style={{ minWidth: "400px" }}
+              variant="outlined"
+              placeholder="请输入几号仓库"
+              name="Warehouse"
+              defaultValue={rows[updateindex]?.Warehouse}
+              size="small"
+              onKeyUp={getVlaue.bind(this, "Warehouse")}
             ></TextField>
           </ListItem>
           <ListItem style={{ marginTop: "15px" }}>
@@ -518,6 +656,23 @@ export default function ORder() {
               defaultValue={rows[updateindex]?.postCode}
               size="small"
               onKeyUp={getVlaue.bind(this, "postCode")}
+            ></TextField>
+          </ListItem>
+          <ListItem style={{ marginTop: "15px" }}>
+            <FormLabel style={{ color: "red" }}>*</FormLabel>
+            <FormLabel
+              style={{ color: "black", marginRight: "15px", minWidth: "70px" }}
+            >
+              <FormattedMessage id="commodity" />
+            </FormLabel>
+            <TextField
+              style={{ minWidth: "400px" }}
+              variant="outlined"
+              placeholder="请输入商品名称"
+              name="commodity"
+              defaultValue={rows[updateindex]?.commodity}
+              size="small"
+              onKeyUp={getVlaue.bind(this, "commodity")}
             ></TextField>
           </ListItem>
           <ListItem style={{ marginTop: "15px" }}>
@@ -544,8 +699,8 @@ export default function ORder() {
           <ListItem>
             <RadioGroup
               aria-label="gender"
-              defaultvalue={rows[updateindex]?.status || selectedValue}
-              value={huoqutianjiazi?.status}
+              // defaultvalue={rows[updateindex]?.status || selectedValue}
+              value={selectedValue}
               name="radio-buttons-group"
               row
               onChange={handleChange}
@@ -562,7 +717,7 @@ export default function ORder() {
               <FormControlLabel
                 value="0"
                 control={<Radio color="primary" />}
-                label={<FormattedMessage id="normal" />}
+                label={<FormattedMessage id="Warehousing" />}
               />
               <FormControlLabel
                 value="1"
@@ -572,16 +727,16 @@ export default function ORder() {
             </RadioGroup>
           </ListItem>
 
-          <ListItem>
+          <ListItem style={{ marginTop: "15px" }}>
             <FormLabel
-              style={{ color: "black", marginLeft: "40px", minWidth: "50px" }}
+              style={{ color: "black", marginRight: "15px", minWidth: "70px" }}
             >
               <FormattedMessage id="createTime" />
             </FormLabel>
             <TextField
               style={{ minWidth: "400px" }}
               variant="outlined"
-              placeholder="请输入时间"
+              placeholder="请输入登记时间"
               size="medium"
               name="createTime"
               defaultValue={rows[updateindex]?.createTime}
@@ -612,7 +767,7 @@ export default function ORder() {
         open={open}
         handleClose={handleClose}
         handleConfirm={handleDelete}
-        content={`是否删除编号：${post_id} , 岗位: ${post_name}这条记录吗?`}
+        content={`是否删除编号：${post_id} , 类别: ${post_name}这条记录吗?`}
       />
     </div>
   );
