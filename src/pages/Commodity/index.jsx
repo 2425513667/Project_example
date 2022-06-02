@@ -463,7 +463,8 @@ export default function ORder() {
 
   //查询重置事件
   useEffect(() => {
-    CommonTip.success("成功");
+    console.log("查询重置参数",params);
+    CommonTip.success("查询重置一次");
   }, [params]);
   return (
     <div className={classes.root}>

@@ -424,14 +424,13 @@ export default function Home() {
 
   //查询重置事件
   useEffect(() => {
-    CommonTip.success(
-      rows.findIndex((post) => post.postCode === params?.postCode)
-    );
     if (rows.findIndex((post) => post.postCode === params?.postCode) !== -1) {
       let py =
         rows[rows.findIndex((post) => post.postCode === params?.postCode)];
       setRows([py]);
     }
+    console.log("查询重置参数",params);
+    CommonTip.success("查询重置一次,没有后端，只针对商品类别一个");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
   return (
