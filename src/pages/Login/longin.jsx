@@ -11,7 +11,7 @@ import { TextField } from "@material-ui/core";
 import CommonTip from "../../components/CommonTip";
 
 function Login(props) {
-  const [statechushizi, setstatechushizi] = React.useState([
+  const statechushizi = [
     { account_number: "111", password: "111" },
     { account_number: "222", password: "222" },
     { account_number: "333", password: "333" },
@@ -21,7 +21,7 @@ function Login(props) {
     { account_number: "777", password: "777" },
     { account_number: "888", password: "888" },
     { account_number: "999", password: "999" },
-  ]);
+  ];
 
   //获取数据
   let [data, setData] = React.useState({
@@ -42,7 +42,7 @@ function Login(props) {
       const py = statechushizi.find((pyadsa) => {
         return pyadsa.account_number === zhang && pyadsa.password === pas;
       });
-      if (py === null) {
+      if (py === null || py === undefined) {
         CommonTip.error("登录失败");
       } else {
         let Remember_password = document.getElementById("logincheckbox");
@@ -62,6 +62,7 @@ function Login(props) {
   //阻止from表单提交
   const handleSubmit = (event) => {
     event.preventDefault();
+    login(data.words.account_number, data.words.password);
   };
 
   //改变语言
@@ -78,8 +79,8 @@ function Login(props) {
 
   //表单验证
   const initialValues = {
-    account_number: undefined,
-    password: undefined,
+    account_number: "",
+    password: "",
   };
   const validationSchema = Yup.object({
     account_number: Yup.string()
@@ -197,9 +198,9 @@ function Login(props) {
                 <input
                   type="submit"
                   value={tex.toString()}
-                  onClick={() =>
-                    login(data.words.account_number, data.words.password)
-                  }
+                  // onClick={() =>
+                  //   login(data.words.account_number, data.words.password)
+                  // }
                 />
               )}
             </FormattedMessage>
