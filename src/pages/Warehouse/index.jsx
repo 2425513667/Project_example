@@ -28,6 +28,7 @@ import StyledDialog from "../../components/StyledDialog";
 import { FormattedMessage } from "react-intl";
 import CommonTip from "../../components/CommonTip";
 import Haeder from "../../components/Haeder";
+import Modal from "./Modal"
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -507,6 +508,16 @@ export default function Warehouse() {
     console.log("查询重置参数",params);
     CommonTip.success("查询重置一次");
   }, [params]);
+
+  // 查询天气的地址
+  const [address,serAdderss] =useState();
+  // 天气模态框显隐
+  const [openWeather,setOpenWeather] =useState(false);
+  // 查询天气
+  const handleClickOpenWeather =(WarehouseAddress)=>{
+    serAdderss(WarehouseAddress);
+    setOpenWeather(true);
+  }
   return (
     <div className={classes.root}>
       <Haeder params={params} setParams={setParams} headerFiled={headerFiled} />
@@ -514,6 +525,8 @@ export default function Warehouse() {
         <Add />
         新增
       </Button>
+         {/* 天气模态框 */}
+      <Modal address={address} openWeather={openWeather} setOpenWeather={setOpenWeather}/>
 
       <Paper className={classes.paper}>
         <TableContainer>
@@ -617,6 +630,14 @@ export default function Warehouse() {
                         {row.CreationTime}
                       </TableCell>
                       <TableCell align="center">
+                        <Button
+                          color="primary"
+                          onClick={() => handleClickOpenWeather(row.WarehouseAddress)}
+                        >
+                          <BorderColor />
+                          天气
+                        </Button>
+
                         <Button
                           color="primary"
                           onClick={() => handleClickOpenupdate(row.postId)}
