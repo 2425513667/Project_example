@@ -290,6 +290,16 @@ export default function ORder() {
   };
   //添加
   const handleClickOpenadd = () => {
+    sethuoqutianjiazi({
+      postId: "",
+      postName: "",
+      Warehouse: "",
+      postCode: "",
+      commodity: "",
+      postSort: "",
+      status: selectedValue,
+      createTime: "",
+    });
     setupdateindex(rows.findIndex((post) => post.postId === post_id));
     setDuihua(true);
   };
@@ -365,26 +375,16 @@ export default function ORder() {
 
   //修改方法
   const postUpdate = () => {
-    let py = {};
+    let py = [];
     for (let index = 0; index < rows.length; index++) {
       const rowstext = rows[index];
       if (rowstext?.post_id === huoqutianjiazi.postId) {
-        py = { ...py, huoqutianjiazi };
+        py = [...py, huoqutianjiazi];
       } else {
-        py = { ...py, rowstext };
+        py = [...py, rowstext];
       }
     }
     setDuihua(false);
-    sethuoqutianjiazi({
-      postId: "",
-      postName: "",
-      Warehouse: "",
-      postCode: "",
-      commodity: "",
-      postSort: "",
-      status: selectedValue,
-      createTime: "",
-    });
     CommonTip.success("修改成功");
   };
 

@@ -344,6 +344,16 @@ export default function Warehouse() {
   };
   //添加
   const handleClickOpenadd = () => {
+    sethuoqutianjiazi({
+      postId: "",
+      personInCnharge: "",
+      Warehouse: "",
+      WarehouseSize: "",
+      WarehouseAddress: "",
+      staffSort: "",
+      status: selectedValue,
+      CreationTime: "",
+    });
     setupdateindex(rows.findIndex((post) => post.postId === post_id));
     setDuihua(true);
   };
@@ -419,26 +429,17 @@ export default function Warehouse() {
 
   //修改方法
   const postUpdate = () => {
-    let py = {};
+    let py = [];
     for (let index = 0; index < rows.length; index++) {
       const rowstext = rows[index];
       if (rowstext?.post_id === huoqutianjiazi.postId) {
-        py = { ...py, huoqutianjiazi };
+        py = [...py, huoqutianjiazi];
       } else {
-        py = { ...py, rowstext };
+        py = [...py, rowstext];
       }
     }
     setDuihua(false);
-    sethuoqutianjiazi({
-      postId: "",
-      personInCnharge: "",
-      Warehouse: "",
-      WarehouseSize: "",
-      WarehouseAddress: "",
-      staffSort: "",
-      status: selectedValue,
-      CreationTime: "",
-    });
+    // setRows(py);
     CommonTip.success("修改成功");
   };
 
@@ -472,7 +473,7 @@ export default function Warehouse() {
       labelName: "仓库地址",
       isShow: true,
       type: "single-select",
-      data: ["深圳", "长沙","珠海","北京"],
+      data: ["深圳", "长沙", "珠海", "北京"],
     },
     {
       filed: "personInCnharge",
@@ -507,7 +508,7 @@ export default function Warehouse() {
   }, [params]);
   return (
     <div className={classes.root}>
-       <Haeder params={params} setParams={setParams} headerFiled={headerFiled} />
+      <Haeder params={params} setParams={setParams} headerFiled={headerFiled} />
       <Button onClick={handleClickOpenadd} variant="outlined" color="primary">
         <Add />
         新增

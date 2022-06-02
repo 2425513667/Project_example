@@ -302,6 +302,13 @@ export default function Home() {
   };
   //添加
   const handleClickOpenadd = () => {
+    sethuoqutianjiazi({
+      categoryId: "",
+      postName: "",
+      postCode: "",
+      postSort: "",
+      CreationTime: "",
+    });
     setupdateindex(rows.findIndex((post) => post.categoryId === category_Id));
     setDuihua(true);
   };
@@ -366,29 +373,21 @@ export default function Home() {
 
   //修改方法
   const postUpdate = () => {
-    let py = {};
+    let py = [];
     for (let index = 0; index < rows.length; index++) {
       const rowstext = rows[index];
       if (rowstext?.category_Id === huoqutianjiazi.categoryId) {
-        py = { ...py, huoqutianjiazi };
+        py = [...py, huoqutianjiazi];
       } else {
-        py = { ...py, rowstext };
+        py = [...py, rowstext];
       }
     }
     setDuihua(false);
-    sethuoqutianjiazi({
-      categoryId: "",
-      postName: "",
-      postCode: "",
-      postSort: "",
-      CreationTime: "",
-    });
     CommonTip.success("修改成功");
   };
 
   //查询数据
   const [params, setParams] = useState({
-    commodity: "",
     postName: "",
     postSort: "",
     postCode: "",
@@ -400,12 +399,6 @@ export default function Home() {
     {
       filed: "postCode",
       labelName: "商品类别",
-      isShow: true,
-      type: "string",
-    },
-    {
-      filed: "commodity",
-      labelName: "商品名称",
       isShow: true,
       type: "string",
     },
@@ -426,12 +419,21 @@ export default function Home() {
       labelName: "商品种类数量",
       isShow: false,
       type: "number",
-    }
+    },
   ];
 
   //查询重置事件
   useEffect(() => {
-    CommonTip.success("成功");
+    CommonTip.success(
+      rows.findIndex((post) => post.postCode === params?.postCode)
+    );
+    if (rows.findIndex((post) => post.postCode === params?.postCode) !== -1) {
+      let py =
+        rows[rows.findIndex((post) => post.postCode === params?.postCode)];
+      console.log(py);
+      setRows([py]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
   return (
     <div className={classes.root}>
