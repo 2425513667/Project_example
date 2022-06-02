@@ -430,7 +430,6 @@ export default function Home() {
     if (rows.findIndex((post) => post.postCode === params?.postCode) !== -1) {
       let py =
         rows[rows.findIndex((post) => post.postCode === params?.postCode)];
-      console.log(py);
       setRows([py]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

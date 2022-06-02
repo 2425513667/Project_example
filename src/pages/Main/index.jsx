@@ -25,6 +25,7 @@ import Home from "../Home";
 import Order from "../Order";
 import Warehouse from "../Warehouse";
 import Commodity from "../Commodity";
+import Dashboard from "../dashboard";
 
 import { mainContext } from "../../reducer";
 import { FormattedMessage } from "react-intl";
@@ -185,7 +186,16 @@ function Main(props) {
         </div>
         <Divider />
         <List>
-          <ListItem button key={1} component={NavLink} to="/main/home">
+          <ListItem button key={1} component={NavLink} to="/main/dashboard">
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText>
+              统计
+              <FormattedMessage id="Interface" />
+            </ListItemText>
+          </ListItem>
+          <ListItem button key={2} component={NavLink} to="/main/home">
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -194,7 +204,7 @@ function Main(props) {
               <FormattedMessage id="Interface" />
             </ListItemText>
           </ListItem>
-          <ListItem button key={2} component={NavLink} to="/main/Warehouse">
+          <ListItem button key={3} component={NavLink} to="/main/Warehouse">
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -203,7 +213,7 @@ function Main(props) {
               <FormattedMessage id="Interface" />
             </ListItemText>
           </ListItem>
-          <ListItem button key={3} component={NavLink} to="/main/commodity">
+          <ListItem button key={4} component={NavLink} to="/main/commodity">
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -212,7 +222,7 @@ function Main(props) {
               <FormattedMessage id="Interface" />
             </ListItemText>
           </ListItem>
-          <ListItem button key={4} component={NavLink} to="/main/order">
+          <ListItem button key={5} component={NavLink} to="/main/order">
             <ListItemIcon>
               <MailIcon />
             </ListItemIcon>
@@ -229,6 +239,7 @@ function Main(props) {
       >
         <div className={classes.drawerHeader} />
         <Switch>
+          <Route path="/main/dashboard" component={Dashboard} />
           <Route path="/main/home" component={Home} />
           <Route path="/main/Warehouse" component={Warehouse} />
           <Route path="/main/commodity" component={Commodity} />
